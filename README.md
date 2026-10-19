@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shreeram Chaudhary — portfolio
 
-## Getting Started
+A one-page portfolio built as a journey of water through a hydropower plant:
+Intake → Penstock → Turbine → Workbench → Powerhouse → Grid. Night-shift SCADA
+control room meets engineer's blueprint: slate ink, phosphor amber, glacial cyan,
+Instrument Serif + JetBrains Mono + Noto Sans Devanagari.
 
-First, run the development server:
+Next.js 16 (App Router), TypeScript, Tailwind CSS 4, GSAP + ScrollTrigger, Lenis,
+Zustand, React Three Fiber. No analytics and no external services.
+
+## Run locally
+
+Node 20.9+.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Production build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Set `NEXT_PUBLIC_SITE_URL` to the deployed origin so `metadataBase`, Open Graph,
+`sitemap.xml` and `robots.txt` point at the right place.
 
-## Learn More
+## Edit your content
 
-To learn more about Next.js, take a look at the following resources:
+All visitor-facing copy lives in `src/data/content.ts`. Components read from it;
+you should not need to touch JSX to change names, projects, skills or copy.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Placeholders to fill before launch:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Where | Placeholder |
+|---|---|
+| `contact.email` | `hello@example.com` — replace and set `emailIsPlaceholder` to `false` |
+| `contact.linkedinUrl`, `contact.cvUrl` | empty; the Grid shows PLACEHOLDER buttons until wired |
+| `smallerBuilds` | two "Open slot" cards reserved for future builds |
+| `NEXT_PUBLIC_SITE_URL` | production origin |
 
-## Deploy on Vercel
+The loan calculator is deliberately sample data (NPR 250,000 / 12.5% / 24 months)
+and is labelled "Sample data, not client data".
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contact messages
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Messages POST to `/api/contact` and append one JSON line to
+`data/messages.jsonl` (git-ignored). Email forwarding is off by default; it turns
+on only when all three variables below are set. See `.env.example`.
+
+```
+RESEND_API_KEY=
+CONTACT_EMAIL_TO=
+CONTACT_EMAIL_FROM=
+```
+
+Rate limits are in-memory per server process: 5 requests / 60 s / IP for contact,
+30 / 60 s / IP for loan estimates.
+
+## Tests
+
+```bash
+npm test                      # loan math unit tests (Vitest)
+npx playwright test           # build + E2E on desktop, Pixel 7, API contract
+```
+
+Playwright starts the production build on port 3211 (override with `PORT`). The
+API contract lives in `.team/CONTRACT.md`; contract specs are in `e2e/contract/`.
+
+## Deploy
+
+Any Node host works (Vercel, a VPS behind Nginx, etc.):
+
+1. `npm ci && npm run build`
+2. `NEXT_PUBLIC_SITE_URL=https://your-domain npm start`
+3. Ensure the process can write `data/` for contact storage.
+
+No database, analytics or third-party inbox is required.
