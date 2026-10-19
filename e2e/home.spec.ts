@@ -4,7 +4,7 @@ import {
   expectNoConsoleErrors,
   type ErrorCapture,
 } from "./support/console";
-import { openSite, waitForHydration } from "./support/site";
+import { openMenuIfNeeded, openSite } from "./support/site";
 
 let capture: ErrorCapture;
 
@@ -15,80 +15,67 @@ test.afterEach(() => {
   expectNoConsoleErrors(capture);
 });
 
-test.describe("home / intake", () => {
-  test("delivers the hero, name, clock and all six stages", async ({ page }) => {
+test.describe("home", () => {
+  test("delivers the hero, name, clock, sections and real work images", async ({
+    page,
+  }) => {
     const response = await openSite(page);
     expect(response?.status()).toBe(200);
 
-    const hero = page.locator("#intake");
+    const hero = page.locator("#top");
     await expect(
-      hero.getByRole("heading", { level: 1, name: /Shreeram Chaudhary/i }),
-    ).toBeVisible();
+      hero.getByRole("heading", { level: 1 }),
+    ).toContainText(/can.t afford to be sloppy/i);
     await expect(hero.getByText("श्रीराम चौधरी")).toBeVisible();
+    await expect(hero.getByText(/Shreeram Chaudhary/i).first()).toBeVisible();
+    await expect(hero.getByLabel(/live time in Kathmandu/i)).toBeVisible();
     await expect(
-      hero.getByText(/I build the software that runs hydropower plants/i),
+      page.getByRole("link", { name: /explore my work/i }),
     ).toBeVisible();
-    await expect(page.getByLabel(/live time in Kathmandu/i)).toBeVisible();
+    await expect(page.getByRole("link", { name: /get in touch/i })).toBeVisible();
 
-    // Work and Contact must be findable immediately.
-    await expect(page.getByRole("link", { name: /^Work$/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /^Contact$/i })).toBeVisible();
-
-    for (const id of [
-      "intake",
-      "penstock",
-      "turbine",
-      "workbench",
-      "powerhouse",
-      "grid",
-    ]) {
+    for (const id of ["about", "work", "stack", "contact"]) {
       await expect(page.locator(`#${id}`), `section #${id}`).toBeAttached();
     }
-    await expect(page.locator(".river-rail__stages li")).toHaveCount(6);
-  });
 
-  test("preloader climbs to 0.990 MW, leaves under 2.5s, and skips", async ({
-    page,
-  }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await waitForHydration(page);
+    const selang = page.getByAltText(/hydropower management dashboard/i);
+    await selang.scrollIntoViewIfNeeded();
+    await expect(selang).toBeVisible();
+    await expect
+      .poll(async () => selang.evaluate((img) => (img as HTMLImageElement).naturalWidth))
+      .toBeGreaterThan(0);
 
-    const skip = page.getByRole("button", { name: /^skip$/i });
-    await expect(skip).toBeVisible();
-    await expect(page.getByText(/CLIMBING TO RATED/i)).toBeVisible();
-
-    // 1.9s climb + 0.28s leave, measured from hydration (not from navigation).
-    await expect(skip).toBeHidden({ timeout: 4_000 });
-    await expect(
-      page.getByRole("heading", { level: 1, name: /Shreeram Chaudhary/i }),
-    ).toBeVisible();
-  });
-
-  test("skip control clears the intro immediately", async ({ page }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await waitForHydration(page);
-    const skip = page.getByRole("button", { name: /^skip$/i });
-    await expect(skip).toBeVisible();
-    await skip.click();
-
-    await expect(page.locator(".preloader")).toHaveCount(0, {
-      timeout: 2_000,
-    });
-    await expect(
-      page.getByRole("heading", { level: 1, name: /Shreeram Chaudhary/i }),
-    ).toBeVisible();
+    const ledger = page.getByAltText(/ledger app for abhiyan/i);
+    await ledger.scrollIntoViewIfNeeded();
+    await expect(ledger).toBeVisible();
+    await expect
+      .poll(async () => ledger.evaluate((img) => (img as HTMLImageElement).naturalWidth))
+      .toBeGreaterThan(0);
   });
 
   test("header navigation reaches work and contact", async ({ page }) => {
     await openSite(page);
 
-    await page.getByRole("link", { name: /^Work$/i }).click();
-    await expect(page.locator("#turbine")).toBeInViewport({ timeout: 5_000 });
+    await openMenuIfNeeded(page);
+    await page
+      .getByRole("navigation", { name: /primary/i })
+      .getByRole("link", { name: /^Work$/i })
+      .click();
+    await expect(page.locator("#work")).toBeInViewport({ timeout: 8_000 });
 
+    await openMenuIfNeeded(page);
     await page
       .getByRole("navigation", { name: /primary/i })
       .getByRole("link", { name: /^Contact$/i })
       .click();
-    await expect(page.locator("#grid")).toBeInViewport({ timeout: 5_000 });
+    await expect(page.locator("#contact")).toBeInViewport({ timeout: 8_000 });
+  });
+
+  test("has no loading screen and no CV download", async ({ page }) => {
+    await openSite(page);
+    await expect(page.locator(".preloader")).toHaveCount(0);
+    await expect(
+      page.getByRole("link", { name: /download cv/i }),
+    ).toHaveCount(0);
   });
 });

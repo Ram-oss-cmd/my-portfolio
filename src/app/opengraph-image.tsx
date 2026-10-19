@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "Shreeram Chaudhary — hydropower software, loan systems and IoT";
+  "Shreeram Chaudhary — software for hydropower, finance and automation";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,61 +16,72 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           position: "relative",
-          background: "#0B1114",
-          color: "#E8E4D8",
-          padding: "52px 64px",
-          fontFamily: "monospace",
+          background: "#F8F5EC",
+          color: "#171717",
+          padding: "48px 60px",
+          fontFamily: "Georgia, serif",
         }}
       >
-        {[180, 360, 540, 720, 900, 1080].map((left) => (
-          <div
-            key={left}
-            style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left,
-              width: 1,
-              background: "rgba(232, 228, 216, 0.08)",
-            }}
-          />
-        ))}
-        {[150, 300, 450].map((top) => (
-          <div
-            key={top}
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top,
-              height: 1,
-              background: "rgba(232, 228, 216, 0.08)",
-            }}
-          />
-        ))}
+        <div
+          style={{
+            position: "absolute",
+            right: 0,
+            top: 0,
+            width: 250,
+            height: "100%",
+            background: "#244BFF",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            right: 250,
+            top: 0,
+            width: 24,
+            height: "100%",
+            background: "#FF5738",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            bottom: 0,
+            width: 220,
+            height: 22,
+            background: "#D7FF64",
+          }}
+        />
 
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            borderBottom: "1px solid rgba(232, 228, 216, 0.24)",
-            paddingBottom: 16,
-            fontSize: 16,
-            letterSpacing: 3,
-            color: "#8C968F",
+            alignItems: "center",
+            paddingBottom: 18,
+            borderBottom: "2px solid #171717",
+            fontFamily: "Arial, sans-serif",
+            fontSize: 18,
+            letterSpacing: 1,
+            maxWidth: 880,
           }}
         >
-          <span>SHREERAM CHAUDHARY / PORTFOLIO</span>
-          <span>27.7172° N, 85.3240° E</span>
+          <span>SOFTWARE DEVELOPER — NEPAL</span>
+          <span>rc.cloop@gmail.com</span>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: 880,
+          }}
+        >
           <span
             style={{
-              fontFamily: "Georgia, serif",
-              fontSize: 136,
-              lineHeight: 0.86,
-              letterSpacing: -5,
+              fontSize: 126,
+              lineHeight: 0.9,
+              letterSpacing: -4,
             }}
           >
             Shreeram
@@ -78,15 +89,14 @@ export default function OpengraphImage() {
           <span
             style={{
               display: "flex",
-              fontFamily: "Georgia, serif",
-              fontSize: 136,
-              lineHeight: 0.86,
-              letterSpacing: -5,
-              marginLeft: 120,
+              fontSize: 126,
+              lineHeight: 0.9,
+              letterSpacing: -4,
+              marginLeft: 96,
             }}
           >
             Chaudhary
-            <span style={{ color: "#FFB000" }}>.</span>
+            <span style={{ color: "#FF5738" }}>.</span>
           </span>
         </div>
 
@@ -95,32 +105,34 @@ export default function OpengraphImage() {
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "space-between",
-            borderTop: "1px solid rgba(232, 228, 216, 0.24)",
+            borderTop: "2px solid #171717",
             paddingTop: 20,
+            maxWidth: 880,
+            fontFamily: "Arial, sans-serif",
           }}
         >
           <span
             style={{
               display: "flex",
-              maxWidth: 700,
-              fontSize: 20,
-              lineHeight: 1.5,
-              color: "#AAB1A7",
+              maxWidth: 640,
+              fontSize: 24,
+              lineHeight: 1.4,
             }}
           >
-            Hydropower software. Loan systems. IoT automation. Built in Nepal.
+            Hydropower plant systems, loan and audit software, web applications
+            and IoT automation.
           </span>
           <span
             style={{
               display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
+              fontSize: 20,
+              fontWeight: 700,
+              padding: "10px 16px",
+              background: "#171717",
+              color: "#F8F5EC",
             }}
           >
-            <span style={{ fontSize: 13, letterSpacing: 3, color: "#8C968F" }}>
-              PLANT OUTPUT
-            </span>
-            <span style={{ fontSize: 38, color: "#FFB000" }}>0.990 MW</span>
+            PORTFOLIO
           </span>
         </div>
       </div>

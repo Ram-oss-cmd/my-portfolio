@@ -99,8 +99,7 @@ export function LoanCalculator() {
   return (
     <div className="loan">
       <div className="loan__head">
-        <span className="tag tag--amber">TMK-03 / INTEREST ENGINE</span>
-        <span className="tag">Sample data, not client data</span>
+        <p className="loan__hint">Sample data, not client data.</p>
       </div>
 
       <form className="loan__form" onSubmit={onSubmit} aria-busy={status === "loading"}>
@@ -200,7 +199,7 @@ export function LoanCalculator() {
 
         <button
           type="submit"
-          className="btn btn--cyan loan__submit"
+          className="button button--primary loan__submit"
           disabled={status === "loading"}
         >
           {status === "loading" ? "Calculating…" : "Calculate"}
@@ -208,14 +207,13 @@ export function LoanCalculator() {
       </form>
 
       <div className="loan__status" role="status" aria-live="polite">
-        {status === "loading" ? "CALCULATING AT THE COUNTER…" : null}
-        {status === "ready" ? "CALCULATION COMPLETE" : null}
+        {status === "loading" ? "Calculating…" : null}
       </div>
 
       {status === "error" ? (
         <div className="alert alert--error" role="alert">
           <p>{error}</p>
-          <button type="button" className="btn btn--ghost btn--small" onClick={() => void calculate(loanSample)}>
+          <button type="button" className="button button--ghost button--small" onClick={() => void calculate(loanSample)}>
             Retry sample
           </button>
         </div>
@@ -238,8 +236,8 @@ export function LoanCalculator() {
             </div>
             <p className="loan__foot">
               {npr.format(result.principal)} over {result.months} months at{" "}
-              {result.annualRatePercent}% annual interest. A working sample of the kind
-              of calculation the Temke loan system does; no client data is shown.
+              {result.annualRatePercent}% annual interest. A working sample of
+              Temke&apos;s interest engine; no client data is shown.
             </p>
           </>
         ) : (

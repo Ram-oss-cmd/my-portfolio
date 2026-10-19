@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { NozzleControls } from "@/components/NozzleControls";
+import { useEffect, useRef } from "react";
 import { useMotionProfile } from "@/hooks/useMotionProfile";
 import { NOZZLE_MAX_MS, useNozzle } from "@/store/nozzle";
 
@@ -13,24 +12,26 @@ type Particle = {
   life: number;
   ttl: number;
   size: number;
+  orange: boolean;
 };
 
-const MAX_PARTICLES = 420;
+const MAX_PARTICLES = 220;
 
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
+/**
+ * Records pointer movement and replays it. The canvas is decoration only:
+ * the real cursor is never hidden or replaced, so it stays instant.
+ */
 export function Nozzle() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
   const particles = useRef<Particle[]>([]);
   const pointer = useRef({ x: 0, y: 0, t: 0, sample: 0, spray: 0 });
   const playStart = useRef(0);
   const playIndex = useRef(0);
   const reducedRef = useRef(true);
-  const [dockVisible, setDockVisible] = useState(false);
-  const [finePointer, setFinePointer] = useState(false);
 
   const { ready, reduced } = useMotionProfile();
   const recording = useNozzle((state) => state.recording);
@@ -41,23 +42,14 @@ export function Nozzle() {
     reducedRef.current = reduced;
   }, [reduced]);
 
+  /* Marks hydration for tests and any code that needs post-hydration timing. */
   useEffect(() => {
-    const query = window.matchMedia("(pointer: fine)");
-    const update = () => setFinePointer(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
+    const root = document.documentElement;
+    root.classList.add("app-ready");
+    return () => root.classList.remove("app-ready");
   }, []);
 
-  /* Native cursor hides only for fine pointers with motion allowed. */
-  useEffect(() => {
-    if (!ready || reduced || !finePointer) return;
-    const root = document.documentElement;
-    root.classList.add("nozzle-native-hidden");
-    return () => root.classList.remove("nozzle-native-hidden");
-  }, [ready, reduced, finePointer]);
-
-  /* Pointer sampling + live spray. */
+  /* Sample the pointer while recording; spray only during record/replay. */
   useEffect(() => {
     if (!ready) return;
 
@@ -65,7 +57,7 @@ export function Nozzle() {
       if (particles.current.length > MAX_PARTICLES) {
         particles.current.splice(0, particles.current.length - MAX_PARTICLES);
       }
-      const ttl = 38 + Math.random() * 26;
+      const ttl = 24 + Math.random() * 20;
       particles.current.push({
         x,
         y,
@@ -73,24 +65,19 @@ export function Nozzle() {
         vy,
         life: ttl,
         ttl,
-        size: 0.8 + Math.random() * 1.8,
+        size: 0.8 + Math.random() * 1.6,
+        orange: Math.random() < 0.25,
       });
     };
 
     const onMove = (event: PointerEvent) => {
       const now = performance.now();
       const last = pointer.current;
+      const state = useNozzle.getState();
       const dx = event.clientX - last.x;
       const dy = event.clientY - last.y;
       const dt = Math.max(8, now - last.t);
-      const speed = Math.min(2.2, Math.hypot(dx, dy) / dt);
 
-      if (!reducedRef.current && cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-        cursorRef.current.classList.add("is-visible");
-      }
-
-      const state = useNozzle.getState();
       if (state.recording && now - last.sample > 24) {
         state.pushSample({
           x: event.clientX,
@@ -100,13 +87,13 @@ export function Nozzle() {
         last.sample = now;
       }
 
-      if (!reducedRef.current && now - last.spray > 22) {
-        const vx = (dx / dt) * 9 + (Math.random() - 0.5) * 1.8;
-        const vy = (dy / dt) * 9 + (Math.random() - 0.5) * 1.8 - speed;
-        spawn(event.clientX, event.clientY, vx, vy);
-        if (Math.random() > 0.55) {
-          spawn(event.clientX, event.clientY, vx * 0.6, vy * 0.6);
-        }
+      if (!reducedRef.current && state.recording && now - last.spray > 30) {
+        spawn(
+          event.clientX,
+          event.clientY,
+          Math.max(-2, Math.min(2, (dx / dt) * 6)) + (Math.random() - 0.5),
+          Math.max(-2, Math.min(2, (dy / dt) * 6)) + (Math.random() - 0.5),
+        );
         last.spray = now;
       }
 
@@ -115,27 +102,8 @@ export function Nozzle() {
       last.t = now;
     };
 
-    const onLeave = () => cursorRef.current?.classList.remove("is-visible");
-    const onTouch = (event: PointerEvent) => {
-      if (event.pointerType === "touch" && !reducedRef.current && cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-        cursorRef.current.classList.add("is-visible");
-      }
-    };
-    const onTouchEnd = () => {
-      window.setTimeout(() => cursorRef.current?.classList.remove("is-visible"), 600);
-    };
-
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerdown", onTouch, { passive: true });
-    window.addEventListener("pointerup", onTouchEnd, { passive: true });
-    document.documentElement.addEventListener("pointerleave", onLeave);
-    return () => {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onTouch);
-      window.removeEventListener("pointerup", onTouchEnd);
-      document.documentElement.removeEventListener("pointerleave", onLeave);
-    };
+    return () => window.removeEventListener("pointermove", onMove);
   }, [ready]);
 
   /* Recording hard cap, even if the pointer never moves. */
@@ -149,7 +117,7 @@ export function Nozzle() {
     return () => window.clearTimeout(timer);
   }, [recording, startedAt]);
 
-  /* Live particle engine and recorded playback. */
+  /* Canvas: recording trail, replay, and short-lived particles. */
   useEffect(() => {
     if (!ready || reduced) return;
     const canvas = canvasRef.current;
@@ -172,30 +140,24 @@ export function Nozzle() {
     resize();
     window.addEventListener("resize", resize);
 
-    const spawn = (x: number, y: number, vx: number, vy: number) => {
-      if (particles.current.length > MAX_PARTICLES) {
-        particles.current.splice(0, particles.current.length - MAX_PARTICLES);
-      }
-      const ttl = 34 + Math.random() * 30;
-      particles.current.push({
-        x,
-        y,
-        vx,
-        vy,
-        life: ttl,
-        ttl,
-        size: 0.8 + Math.random() * 1.9,
-      });
-    };
-
     const frame = (now: number) => {
       const dt = Math.min(2.5, (now - lastTime) / 16.667);
       lastTime = now;
       ctx.clearRect(0, 0, width, height);
-      ctx.globalCompositeOperation = "lighter";
 
       const state = useNozzle.getState();
       const samples = state.samples;
+
+      if (state.recording && samples.length > 1) {
+        ctx.strokeStyle = "rgba(36, 75, 255, 0.22)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(samples[0].x, samples[0].y);
+        for (let i = 1; i < samples.length; i += 1) {
+          ctx.lineTo(samples[i].x, samples[i].y);
+        }
+        ctx.stroke();
+      }
 
       if (state.playing && samples.length > 1) {
         if (playStart.current === 0) {
@@ -220,8 +182,8 @@ export function Nozzle() {
         const x = lerp(first.x, second.x, mix);
         const y = lerp(first.y, second.y, mix);
 
-        ctx.strokeStyle = "rgba(111, 227, 224, 0.28)";
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(36, 75, 255, 0.35)";
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(samples[0].x, samples[0].y);
         for (let i = 1; i <= index; i += 1) {
@@ -230,13 +192,26 @@ export function Nozzle() {
         ctx.lineTo(x, y);
         ctx.stroke();
 
-        ctx.fillStyle = "rgba(255, 176, 0, 0.9)";
+        ctx.fillStyle = "rgba(255, 87, 56, 0.95)";
         ctx.beginPath();
-        ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+        ctx.arc(x, y, 3.2, 0, Math.PI * 2);
         ctx.fill();
 
-        spawn(x, y, (Math.random() - 0.5) * 1.4, (Math.random() - 0.5) * 1.4 - 0.5);
-        spawn(x, y, (Math.random() - 0.5) * 2.2, (Math.random() - 0.5) * 2.2);
+        for (let i = 0; i < 2; i += 1) {
+          if (particles.current.length < MAX_PARTICLES) {
+            const ttl = 20 + Math.random() * 16;
+            particles.current.push({
+              x,
+              y,
+              vx: (Math.random() - 0.5) * 2.4,
+              vy: (Math.random() - 0.5) * 2.4,
+              life: ttl,
+              ttl,
+              size: 0.8 + Math.random() * 1.5,
+              orange: true,
+            });
+          }
+        }
 
         if (elapsed >= total) {
           state.stopPlayback();
@@ -253,22 +228,24 @@ export function Nozzle() {
         const particle = list[i];
         particle.x += particle.vx * dt;
         particle.y += particle.vy * dt;
-        particle.vy += 0.055 * dt;
-        particle.vx *= 0.996;
+        particle.vy += 0.04 * dt;
         particle.life -= dt;
         if (particle.life <= 0) {
           list.splice(i, 1);
           continue;
         }
         const alpha = Math.max(0, particle.life / particle.ttl);
-        ctx.fillStyle = `rgba(111, 227, 224, ${alpha * 0.75})`;
+        ctx.fillStyle = particle.orange
+          ? `rgba(255, 87, 56, ${alpha * 0.8})`
+          : `rgba(36, 75, 255, ${alpha * 0.55})`;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      ctx.globalCompositeOperation = "source-over";
-      raf = requestAnimationFrame(frame);
+      if (state.recording || state.playing || list.length > 0) {
+        raf = requestAnimationFrame(frame);
+      }
     };
 
     raf = requestAnimationFrame(frame);
@@ -278,9 +255,9 @@ export function Nozzle() {
       ctx.clearRect(0, 0, width, height);
       particles.current = [];
     };
-  }, [ready, reduced]);
+  }, [ready, reduced, recording, playing]);
 
-  /* Reduced motion: replay draws a still path instead of spraying. */
+  /* Reduced motion: replay shows the recorded path without movement. */
   useEffect(() => {
     if (!ready || !reduced || !playing) return;
     const canvas = canvasRef.current;
@@ -294,9 +271,9 @@ export function Nozzle() {
 
     const samples = useNozzle.getState().samples;
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx.strokeStyle = "rgba(111, 227, 224, 0.65)";
+    ctx.strokeStyle = "rgba(36, 75, 255, 0.7)";
     ctx.lineWidth = 1.5;
-    ctx.setLineDash([3, 5]);
+    ctx.setLineDash([4, 5]);
     ctx.beginPath();
     samples.forEach((sample, index) => {
       if (index === 0) ctx.moveTo(sample.x, sample.y);
@@ -304,11 +281,11 @@ export function Nozzle() {
     });
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = "rgba(255, 176, 0, 0.9)";
+    ctx.fillStyle = "rgba(255, 87, 56, 0.95)";
     const last = samples[samples.length - 1];
     if (last) {
       ctx.beginPath();
-      ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+      ctx.arc(last.x, last.y, 3.5, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -351,44 +328,5 @@ export function Nozzle() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  /* The fixed dock appears once the hero controls leave the viewport. */
-  useEffect(() => {
-    const anchor = document.getElementById("nozzle-hero-controls");
-    if (!anchor) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = !entries[0]?.isIntersecting;
-        setDockVisible(visible);
-        /* Keep only one accessible REC/PLAY set; the dock is desktop-only. */
-        anchor.style.visibility =
-          visible && window.matchMedia("(min-width: 1024px)").matches ? "hidden" : "";
-      },
-      { threshold: 0.2 },
-    );
-    observer.observe(anchor);
-    return () => {
-      observer.disconnect();
-      anchor.style.visibility = "";
-    };
-  }, []);
-
-  return (
-    <>
-      <canvas ref={canvasRef} className="nozzle-canvas" aria-hidden="true" />
-      <div ref={cursorRef} className="nozzle-cursor" aria-hidden="true">
-        <span className="nozzle-cursor__ring" />
-        <span className="nozzle-cursor__line nozzle-cursor__line--h" />
-        <span className="nozzle-cursor__line nozzle-cursor__line--v" />
-      </div>
-
-      <div
-        className="nozzle-dock"
-        data-visible={dockVisible}
-        aria-hidden={!dockVisible}
-        inert={!dockVisible}
-      >
-        <NozzleControls />
-      </div>
-    </>
-  );
+  return <canvas ref={canvasRef} className="nozzle-canvas" aria-hidden="true" />;
 }

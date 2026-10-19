@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import {
   Instrument_Serif,
-  JetBrains_Mono,
+  Inter,
   Noto_Sans_Devanagari,
 } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -17,8 +17,8 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -31,7 +31,7 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 });
 
 const title =
-  "Shreeram Chaudhary — Hydropower software, loan systems and IoT";
+  "Shreeram Chaudhary — Software for hydropower, finance and automation";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -49,6 +49,7 @@ export const metadata: Metadata = {
     "Nepal software developer",
     "loan system",
     "VBA",
+    "Linux",
     "IoT automation",
     "Selang SHP",
   ],
@@ -77,15 +78,15 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0B1114",
-  colorScheme: "dark",
+  themeColor: "#F8F5EC",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${jetbrainsMono.variable} ${notoSansDevanagari.variable}`}
+      className={`${instrumentSerif.variable} ${inter.variable} ${notoSansDevanagari.variable}`}
     >
       <body>
         <a className="skip-link" href="#main">

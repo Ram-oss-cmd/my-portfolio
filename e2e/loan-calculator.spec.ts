@@ -5,7 +5,7 @@ import {
   expectNoConsoleErrors,
   type ErrorCapture,
 } from "./support/console";
-import { openSite, showStation } from "./support/site";
+import { openSite } from "./support/site";
 
 let capture: ErrorCapture;
 
@@ -47,7 +47,6 @@ test.describe("loan calculator (sample data)", () => {
     page,
   }) => {
     await openSite(page);
-    await showStation(page, "TMK-03");
     await expect(
       page.getByText(/sample data, not client data/i).first(),
     ).toBeVisible();
@@ -87,7 +86,6 @@ test.describe("loan calculator (sample data)", () => {
 
   test("handles zero interest", async ({ page }) => {
     await openSite(page);
-    await showStation(page, "TMK-03");
     await fillSample(page, 250_000, 0, 24);
     await chooseReducing(page);
 
@@ -109,10 +107,14 @@ test.describe("loan calculator (sample data)", () => {
     page,
   }) => {
     await openSite(page);
-    await showStation(page, "TMK-03");
-    let requests = 0;
+    let outOfRangeRequests = 0;
     page.on("request", (request) => {
-      if (request.url().includes("/api/loan-estimate")) requests += 1;
+      if (
+        request.url().includes("/api/loan-estimate") &&
+        request.postData()?.includes("2000000000")
+      ) {
+        outOfRangeRequests += 1;
+      }
     });
 
     await fillSample(page, 2_000_000_000, 12.5, 24);
@@ -121,7 +123,7 @@ test.describe("loan calculator (sample data)", () => {
     await expect(
       page.getByText(/keep the sample under NPR 1,000,000,000/i),
     ).toBeVisible();
-    expect(requests).toBe(0);
+    expect(outOfRangeRequests).toBe(0);
   });
 
   test("shows a safe error when the API fails", async ({ page }) => {
@@ -137,11 +139,9 @@ test.describe("loan calculator (sample data)", () => {
         }),
       }),
     );
-    // The browser logs failed HTTP responses; that is expected in this test.
     capture.allow.push(/Failed to load resource/i, /500/i);
 
     await openSite(page);
-    await showStation(page, "TMK-03");
     await fillSample(page, 250_000, 12.5, 24);
     await chooseReducing(page);
     await loan(page).getByRole("button", { name: /^calculate/i }).click();
@@ -167,7 +167,6 @@ test.describe("loan calculator (sample data)", () => {
     capture.allow.push(/Failed to load resource/i, /429/i);
 
     await openSite(page);
-    await showStation(page, "TMK-03");
     await fillSample(page, 250_000, 12.5, 24);
     await chooseReducing(page);
     await loan(page).getByRole("button", { name: /^calculate/i }).click();

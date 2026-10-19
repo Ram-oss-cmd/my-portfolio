@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" fill="#0B1114" />
-  <path d="M13 45a19 19 0 0 1 38 0" fill="none" stroke="#E8E4D8" stroke-opacity="0.22" stroke-width="3" />
-  <path d="M13 45a19 19 0 0 1 19-19" fill="none" stroke="#FFB000" stroke-width="3" stroke-linecap="square" />
-  <line x1="32" y1="34" x2="43" y2="23" stroke="#FFB000" stroke-width="3" stroke-linecap="square" />
-  <circle cx="32" cy="34" r="3" fill="#6FE3E0" />
+  <rect width="64" height="64" fill="#F8F5EC" />
+  <rect x="5" y="5" width="54" height="54" fill="#244BFF" />
+  <text x="32" y="42" text-anchor="middle" font-family="Georgia, serif" font-size="27" fill="#F8F5EC">SC</text>
+  <rect x="47" y="47" width="12" height="12" fill="#FF5738" />
 </svg>

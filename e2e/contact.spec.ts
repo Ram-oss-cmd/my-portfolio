@@ -34,7 +34,7 @@ test.describe("contact form", () => {
   }) => {
     await openSite(page);
     await page
-      .getByRole("heading", { name: /power delivered/i })
+      .getByRole("heading", { name: /have something worth building/i })
       .scrollIntoViewIfNeeded();
     await fillValid(page, `${test.info().project.name}`);
 

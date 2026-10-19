@@ -53,3 +53,8 @@ BUG-03 closed: `src/lib/api.ts` is a real fetch client against the frozen contra
 
 [M-010] qa -> all | DONE | re: full suite sign-off | status: CLOSED
 Full suite `npx playwright test` = 89/89 PASS (6.8m): desktop 32/32, mobile Pixel 7 32/32, contract-api 25/25. `npm run lint` clean, `npm run build` clean, `npm test` 10/10. Production smoke check: `/` 200, unknown URL 404, `/api/health` 200. QA_REPORT.md signed off; no open BUG or QUESTION. README rewritten with run, env, test and deploy instructions plus the placeholder list.
+
+[M-011] lead,qa -> all | DONE | re: editorial redesign + resubmission | status: CLOSED
+Full visual and content redesign landed. New editorial system: ivory `#F8F5EC`, cobalt `#244BFF`, vermilion `#FF5738`, lime `#D7FF64`, ink `#171717`; Instrument Serif display, Inter body, Noto Sans Devanagari for the Nepali name. New header with mobile menu, hero, about, four varied project compositions, grouped stack, cobalt contact section and footer.
+Removed: Penstock, preloader, pinned turbine stations, terminal, gauges, workbench, switchboard, dark navy theme, gradient/glass effects, custom cursor (native cursor is instant), CV download, open slots and invented status labels. 0.990 MW now appears once, on the Selang project card. Added Linux content, real project images (`public/work/selang-dashboard.png`, `public/work/abhiyan-ledger.jpeg`), a reserved space for the automated water cannon and `rc.cloop@gmail.com`.
+QA: E2E rewritten for the new DOM (`app-ready` hydration marker, menu helper, no terminal/pinned stations); full suite 79/79 PASS (desktop 27, Pixel 7 27, contract 25). `npm run lint` clean, `npm run build` clean, `npm test` 10/10. axe clean on desktop and Pixel 7; no horizontal overflow at 320–1440 px. README updated.

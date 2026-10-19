@@ -15,7 +15,7 @@ test.afterEach(() => {
   expectNoConsoleErrors(capture);
 });
 
-const controls = (page: Page) => page.locator("#nozzle-hero-controls");
+const controls = (page: Page) => page.locator("#nozzle-controls");
 const state = (page: Page) => controls(page).locator(".nozzle-state");
 
 async function recordSomeMotion(page: Page) {
@@ -30,27 +30,30 @@ async function recordSomeMotion(page: Page) {
   }
 }
 
-test.describe("REC / PLAY nozzle", () => {
+test.describe("Record / Replay", () => {
   test("records a path and replays it", async ({ page }) => {
     await openSite(page);
 
-    await expect(controls(page).getByRole("button", { name: /^REC/i })).toBeVisible();
     await expect(
-      page.getByText(/idea behind my IoT water cannon/i).first(),
+      controls(page).getByRole("button", { name: /^Record/i }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(/idea behind the automated water cannon/i).first(),
     ).toBeVisible();
     await expect(page.getByText(/up to 6 seconds/i).first()).toBeVisible();
 
-    await controls(page).getByRole("button", { name: /^REC/i }).click();
-    await expect(state(page)).toContainText(/REC \d\.\ds \/ 6\.0s/);
+    await controls(page).getByRole("button", { name: /^Record/i }).click();
+    await expect(state(page)).toContainText(/Recording/);
+    await expect(state(page)).toContainText(/6\.0s/);
 
     await recordSomeMotion(page);
-    await controls(page).getByRole("button", { name: /^REC/i }).click();
+    await controls(page).getByRole("button", { name: /^Record/i }).click();
 
-    await expect(state(page)).toContainText(/PATH STORED/);
-    const play = controls(page).getByRole("button", { name: /^PLAY/i });
+    await expect(state(page)).toContainText(/Path ready/);
+    const play = controls(page).getByRole("button", { name: /^Replay/i });
     await expect(play).toBeEnabled();
     await play.click();
-    await expect(state(page)).toContainText(/REPLAYING/, { timeout: 1_500 });
+    await expect(state(page)).toContainText(/Replaying/, { timeout: 1_500 });
   });
 
   test("R and P keys work outside text fields", async ({ page }) => {
@@ -58,32 +61,32 @@ test.describe("REC / PLAY nozzle", () => {
     await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
 
     await page.keyboard.press("r");
-    await expect(state(page)).toContainText(/REC \d\.\ds \/ 6\.0s/);
+    await expect(state(page)).toContainText(/Recording/);
 
     await recordSomeMotion(page);
     await page.keyboard.press("r");
-    await expect(state(page)).toContainText(/PATH STORED/);
+    await expect(state(page)).toContainText(/Path ready/);
 
     await page.keyboard.press("p");
-    await expect(state(page)).toContainText(/REPLAYING/, { timeout: 1_500 });
+    await expect(state(page)).toContainText(/Replaying/, { timeout: 1_500 });
   });
 
-  test("the 6 second cap is advertised and enforced by the state label", async ({
-    page,
-  }) => {
+  test("the 6 second cap is advertised and ends recording", async ({ page }) => {
     await openSite(page);
-    await controls(page).getByRole("button", { name: /^REC/i }).click();
-    await expect(state(page)).toContainText(/\/ 6\.0s/);
+    await controls(page).getByRole("button", { name: /^Record/i }).click();
+    await expect(state(page)).toContainText(/6\.0s/);
 
-    // Do not wait six seconds: the store's hard cap is unit-level behaviour;
-    // this asserts the UI communicates the cap.
-    await controls(page).getByRole("button", { name: /^REC/i }).click();
-    await expect(state(page)).not.toContainText(/REC \d/);
+    await controls(page).getByRole("button", { name: /^Record/i }).click();
+    await expect(state(page)).not.toContainText(/Recording/);
   });
 
-  test("touch users get tap-and-drag controls", async ({ page }) => {
+  test("touch users can operate the controls", async ({ page }) => {
     await openSite(page);
-    await expect(controls(page).getByRole("button", { name: /^REC/i })).toBeVisible();
-    await expect(page.getByText(/on touch: tap and drag/i).first()).toBeVisible();
+    await expect(
+      controls(page).getByRole("button", { name: /^Record/i }),
+    ).toBeVisible();
+    await expect(
+      controls(page).getByRole("button", { name: /^Replay/i }),
+    ).toBeVisible();
   });
 });

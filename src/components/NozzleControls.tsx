@@ -29,13 +29,13 @@ export function NozzleControls({ id, className }: NozzleControlsProps) {
     return () => window.clearInterval(timer);
   }, [recording, startedAt]);
 
-  const state = playing
-    ? "REPLAYING"
+  const label = playing
+    ? "Replaying"
     : recording
-      ? `REC ${elapsed.toFixed(1)}s / 6.0s`
+      ? "Recording"
       : canPlay
-        ? "PATH STORED"
-        : "READY";
+        ? "Path ready"
+        : "Ready";
 
   return (
     <div id={id} className={`nozzle-controls ${className ?? ""}`}>
@@ -48,7 +48,7 @@ export function NozzleControls({ id, className }: NozzleControlsProps) {
         disabled={playing}
       >
         <span className="nozzle-btn__mark nozzle-btn__mark--rec" aria-hidden="true" />
-        REC
+        Record
         <kbd>R</kbd>
       </button>
 
@@ -60,12 +60,15 @@ export function NozzleControls({ id, className }: NozzleControlsProps) {
         disabled={!canPlay || recording || playing}
       >
         <span className="nozzle-btn__mark nozzle-btn__mark--play" aria-hidden="true" />
-        PLAY
+        Replay
         <kbd>P</kbd>
       </button>
 
-      <p className="nozzle-state" aria-live="polite">
-        {state}
+      <p className="nozzle-state">
+        <span aria-live="polite">{label}</span>
+        {recording ? (
+          <span aria-hidden="true"> {elapsed.toFixed(1)}s / 6.0s</span>
+        ) : null}
       </p>
     </div>
   );

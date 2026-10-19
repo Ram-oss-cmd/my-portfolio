@@ -5,7 +5,7 @@ import {
   expectNoConsoleErrors,
   type ErrorCapture,
 } from "./support/console";
-import { openSite } from "./support/site";
+import { openMenuIfNeeded, openSite } from "./support/site";
 
 let capture: ErrorCapture;
 
@@ -41,6 +41,7 @@ test.describe("accessibility", () => {
 
   test("uses one h1, a main landmark and a labelled nav", async ({ page }) => {
     await openSite(page);
+    await openMenuIfNeeded(page);
 
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("main")).toHaveCount(1);

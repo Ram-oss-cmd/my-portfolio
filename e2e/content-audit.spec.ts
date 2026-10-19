@@ -4,7 +4,7 @@ import {
   expectNoConsoleErrors,
   type ErrorCapture,
 } from "./support/console";
-import { openSite, showStation } from "./support/site";
+import { openSite } from "./support/site";
 
 let capture: ErrorCapture;
 
@@ -21,29 +21,23 @@ test.describe("content honesty", () => {
   }) => {
     await openSite(page);
 
-    await showStation(page, "TMK-03");
     await expect(
       page.getByText(/sample data, not client data/i).first(),
     ).toBeVisible();
 
-    const turbine = page.locator("#turbine");
-    await showStation(page, "IOT-04");
-    await expect(turbine.getByText(/team project/i).first()).toBeVisible();
+    const work = page.locator("#work");
+    await expect(work.getByText(/team project/i).first()).toBeVisible();
     await expect(
-      turbine.getByText(/I did not build it alone|I contributed/i).first(),
+      work.getByText(/software side|did not build it alone/i).first(),
     ).toBeVisible();
 
-    // Learning items are explicitly in progress, with no claimed certificates.
-    await expect(page.locator("#workbench").getByText(/IN PROGRESS/)).toHaveCount(
-      3,
-    );
+    const stack = page.locator("#stack");
+    await expect(stack.getByText(/learning now/i)).toBeVisible();
+    await expect(stack.getByText(/Python, AI, Robotics/)).toBeVisible();
   });
 
   test("contains no invented social proof or statistics", async ({ page }) => {
     await openSite(page);
-    await page
-      .getByRole("heading", { name: /power delivered/i })
-      .scrollIntoViewIfNeeded();
 
     const text = await page.locator("body").innerText();
     const forbidden = [
@@ -61,23 +55,18 @@ test.describe("content honesty", () => {
     expect(found.map(String)).toEqual([]);
   });
 
-  test("shows the real plant output and no fabricated metrics", async ({
+  test("shows the plant output once, the real email, and no CV", async ({
     page,
   }) => {
     await openSite(page);
-    await expect(
-      page.getByText("0.990 MW").filter({ visible: true }).first(),
-    ).toBeVisible();
 
-    const meter = page.getByRole("meter", {
-      name: /plant output in megawatts/i,
-    });
-    await meter.scrollIntoViewIfNeeded();
-    await expect(meter).toBeVisible();
-    await expect
-      .poll(async () => Number(await meter.getAttribute("aria-valuenow")), {
-        timeout: 5_000,
-      })
-      .toBeGreaterThan(0);
+    await expect(page.getByText("0.990 MW")).toHaveCount(1);
+    await expect(
+      page.getByRole("link", { name: "rc.cloop@gmail.com" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /download cv/i }),
+    ).toHaveCount(0);
+    await expect(page.getByText(/Linux is home base/i)).toBeVisible();
   });
 });

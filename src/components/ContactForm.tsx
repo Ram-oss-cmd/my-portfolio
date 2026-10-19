@@ -65,14 +65,13 @@ export function ContactForm() {
   if (status === "success") {
     return (
       <div className="contact-form contact-form--done" role="status">
-        <p className="label">TRANSMISSION COMPLETE</p>
         <h3 ref={successRef} tabIndex={-1}>
           Message received.
         </h3>
-        <p>The line is open. I&apos;ll read it at the next shift.</p>
+        <p>Thanks — I&apos;ll read it soon.</p>
         <button
           type="button"
-          className="btn btn--ghost"
+          className="button button--ghost"
           onClick={() => setStatus("idle")}
         >
           Send another message
@@ -83,17 +82,10 @@ export function ContactForm() {
 
   return (
     <form className="contact-form" onSubmit={onSubmit} aria-busy={status === "submitting"}>
-      <div className="contact-form__head">
-        <span className="label">OUTBOUND / MESSAGE</span>
-        <span className="contact-form__status">
-          {status === "submitting" ? "TRANSMITTING…" : "READY"}
-        </span>
-      </div>
-
       {status === "error" ? (
         <div className="alert alert--error" role="alert">
           <p>{error}</p>
-          <button type="submit" className="btn btn--ghost btn--small">
+          <button type="submit" className="button button--ghost button--small">
             Retry send
           </button>
         </div>
@@ -173,14 +165,13 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="btn btn--amber contact-form__submit"
+        className="button button--primary contact-form__submit"
         disabled={status === "submitting"}
       >
         {status === "submitting" ? "Sending…" : "Send message"}
       </button>
       <p className="contact-form__note">
-        No tracking, no third-party inbox. Messages are stored by this site&apos;s
-        own API.
+        Messages go to this site&apos;s own API. No tracking, no third-party inbox.
       </p>
     </form>
   );

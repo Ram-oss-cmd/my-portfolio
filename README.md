@@ -1,12 +1,17 @@
 # Shreeram Chaudhary — portfolio
 
-A one-page portfolio built as a journey of water through a hydropower plant:
-Intake → Penstock → Turbine → Workbench → Powerhouse → Grid. Night-shift SCADA
-control room meets engineer's blueprint: slate ink, phosphor amber, glacial cyan,
-Instrument Serif + JetBrains Mono + Noto Sans Devanagari.
+A one-page editorial portfolio: warm ivory paper, cobalt, vermilion and lime;
+Instrument Serif for display type, Inter for the interface, Noto Sans Devanagari
+for the Nepali name. Sections: hero, about, selected work, stack and contact.
 
-Next.js 16 (App Router), TypeScript, Tailwind CSS 4, GSAP + ScrollTrigger, Lenis,
-Zustand, React Three Fiber. No analytics and no external services.
+The work section is factual: Selang Small Hydropower Project (plant management),
+Abhiyan Engineering Nepal (budget and HR systems), Temke Investment Pvt. Ltd.
+(loan and audit systems, with a live sample calculator) and the automated water
+cannon (a team project with a reserved space for the next prototype). Project
+images live in `public/work/`.
+
+Next.js 16 (App Router), TypeScript, Tailwind CSS 4, GSAP + ScrollTrigger, Lenis
+and Zustand. No analytics and no external services.
 
 ## Run locally
 
@@ -27,22 +32,20 @@ npm start
 Set `NEXT_PUBLIC_SITE_URL` to the deployed origin so `metadataBase`, Open Graph,
 `sitemap.xml` and `robots.txt` point at the right place.
 
-## Edit your content
+## Edit content
 
-All visitor-facing copy lives in `src/data/content.ts`. Components read from it;
-you should not need to touch JSX to change names, projects, skills or copy.
+Visitor-facing copy lives in `src/data/content.ts`. Components read from it for
+the name, intro, about text, stack groups, loan sample and contact details.
+Project layouts are composed in `src/components/Work.tsx` so each project can
+keep its own shape.
 
-Placeholders to fill before launch:
+Contact: `contact.email` is `rc.cloop@gmail.com`.
 
-| Where | Placeholder |
-|---|---|
-| `contact.email` | `hello@example.com` — replace and set `emailIsPlaceholder` to `false` |
-| `contact.linkedinUrl`, `contact.cvUrl` | empty; the Grid shows PLACEHOLDER buttons until wired |
-| `smallerBuilds` | two "Open slot" cards reserved for future builds |
-| `NEXT_PUBLIC_SITE_URL` | production origin |
+To change a project image, replace the file in `public/work/` and update its
+`width`/`height` in `src/components/Work.tsx` if the aspect ratio changes.
 
-The loan calculator is deliberately sample data (NPR 250,000 / 12.5% / 24 months)
-and is labelled "Sample data, not client data".
+The loan calculator is deliberately sample data (NPR 250,000 / 12.5% / 24
+months) and is labelled “Sample data, not client data”.
 
 ## Contact messages
 
@@ -68,6 +71,8 @@ npx playwright test           # build + E2E on desktop, Pixel 7, API contract
 
 Playwright starts the production build on port 3211 (override with `PORT`). The
 API contract lives in `.team/CONTRACT.md`; contract specs are in `e2e/contract/`.
+UI specs cover the hero and navigation, images, the record/replay control, the
+loan calculator, contact form, 404, reduced motion and axe.
 
 ## Deploy
 

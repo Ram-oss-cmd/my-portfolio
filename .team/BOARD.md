@@ -24,3 +24,7 @@ Status values: TODO / DOING / REVIEW / QA / DONE
 | Q-04 | E2E desktop + mobile, a11y, reduced motion, 404 | qa | DONE | 89/89 Playwright across desktop, Pixel 7 and contract-api; pinned-station helper; axe clean |
 | L-01 | Scaffold, deps, team workspace, commit | lead | DONE | |
 | L-02 | Final verify, README, commit, shutdown | lead | DONE | lint/build/unit/E2E green; README rewritten; committed |
+| R-01 | Editorial redesign: ivory/cobalt/vermilion/lime, serif + sans, new header/hero/about/work/stack/contact/footer | lead | DONE | `Hero`, `About`, `Work`, `Stack`, `ContactSection`, `SiteFooter`, `SiteHeader`; old dark theme removed |
+| R-02 | Remove old theme pieces: Penstock, preloader, pinned turbine, terminal, gauges, custom cursor, CV, open slots, 0.990 MW outside the Selang card | lead | DONE | Deleted 11 components + 2 hooks; native cursor restored; REC/PLAY moved into the hero card |
+| R-03 | Real project visuals, water-cannon space, Linux content, contact email | lead | DONE | `public/work/selang-dashboard.png`, `public/work/abhiyan-ledger.jpeg`; reserved prototype panel; `rc.cloop@gmail.com` |
+| R-04 | Rewrite E2E for new DOM and rerun all gates | qa | DONE | 79/79 Playwright (desktop 27, Pixel 7 27, contract 25); lint/build/unit 10/10 green |
