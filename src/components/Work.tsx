@@ -1,20 +1,19 @@
 import Image from "next/image";
-import { LoanCalculator } from "@/components/LoanCalculator";
 
 export function Work() {
   return (
     <section id="work" className="work section">
       <div className="shell">
-        <div className="section-head section-head--work" data-reveal>
+        <div className="section-head section-head--work" data-reveal suppressHydrationWarning>
           <p className="eyebrow">Selected work</p>
-          <h2>Four systems, four different problems.</h2>
+          <h2>Four systems so far. Each one a different problem.</h2>
           <p className="section-head__note">
             A plant, an office, a lender and a machine. Different rooms, same job:
-            make the work easier to run than the paper it replaced.
+            make the work easier to run than the paper process it replaced.
           </p>
         </div>
 
-        <article className="project project--feature" data-reveal>
+        <article className="project project--feature" data-reveal suppressHydrationWarning>
           <div className="project__copy">
             <p className="project__index">01</p>
             <h3>Selang Small Hydropower Project</h3>
@@ -22,18 +21,9 @@ export function Work() {
             <p className="project__text">
               A management system for the plant: generation, status and the records
               the office needs, kept in one place instead of across paper and
-              spreadsheets.
+              spreadsheets. It also manages the hydropower&apos;s inventory, so
+              stock and plant records live in the same system.
             </p>
-            <dl className="project__facts">
-              <div>
-                <dt>My role</dt>
-                <dd>Built the plant&apos;s management software</dd>
-              </div>
-              <div>
-                <dt>Made with</dt>
-                <dd>Web and application development, automation, deployment</dd>
-              </div>
-            </dl>
           </div>
 
           <figure className="project__media project__media--wide">
@@ -44,11 +34,11 @@ export function Work() {
               alt="Hydropower management dashboard for the Selang plant, showing generation and plant records"
               sizes="(max-width: 900px) 100vw, 60vw"
             />
-            <figcaption>The plant dashboard, running on sample data.</figcaption>
+            <figcaption>The plant dashboard, running live on real plant data.</figcaption>
           </figure>
         </article>
 
-        <article className="project project--split" data-reveal>
+        <article className="project project--split" data-reveal suppressHydrationWarning>
           <figure className="project__media project__media--phone">
             <Image
               src="/work/abhiyan-ledger.jpeg"
@@ -62,67 +52,47 @@ export function Work() {
           <div className="project__copy">
             <p className="project__index">02</p>
             <h3>Abhiyan Engineering Nepal</h3>
-            <p className="project__meta">Budget calculation &amp; human resources</p>
+            <p className="project__meta">Budget logging &amp; human resources</p>
             <p className="project__text">
-              Two systems for the office: a budget calculation tool and a human
-              resource management system. Day-to-day records moved out of loose
-              spreadsheets and into software the team could run themselves.
+              Two systems for the office: a budget logging and management system
+              and a human resource management system. Records that used to take
+              time to write and were easily lost in paper copies are now digital,
+              and the team can run them themselves.
             </p>
-            <dl className="project__facts">
-              <div>
-                <dt>My role</dt>
-                <dd>Built the budget and HR systems</dd>
-              </div>
-              <div>
-                <dt>Made with</dt>
-                <dd>Application development, database-backed records</dd>
-              </div>
-            </dl>
           </div>
         </article>
 
-        <article className="project project--calc" data-reveal>
+        <article className="project project--text" data-reveal suppressHydrationWarning>
           <div className="project__copy">
             <p className="project__index">03</p>
             <h3>Temke Investment Pvt. Ltd.</h3>
             <p className="project__meta">Hong Kong · Loan &amp; audit systems</p>
             <p className="project__text">
-              I built the audit system and the entire loan-giving system: borrower
-              records, repayment schedules and interest calculation. The calculator
-              beside this is a live, working sample of that interest engine.
+              I&apos;ve built the audit system and the entire loan-giving system:
+              borrower records, repayment schedules, interest calculation and
+              many more. The work is confidential, so client data and screenshots
+              are not shown.
             </p>
-            <dl className="project__facts">
-              <div>
-                <dt>My role</dt>
-                <dd>Built the audit and loan systems end to end</dd>
-              </div>
-              <div>
-                <dt>Made with</dt>
-                <dd>Application development, financial calculation, reporting</dd>
-              </div>
-            </dl>
-          </div>
-
-          <div className="project__calculator">
-            <h4>Try the interest engine</h4>
-            <LoanCalculator />
           </div>
         </article>
 
-        <article className="project project--cannon" data-reveal>
+        <article className="project project--cannon" data-reveal suppressHydrationWarning>
           <div className="project__copy">
             <p className="project__index">04</p>
-            <h3>Automated water cannon</h3>
-            <p className="project__meta">Team project · software contribution</p>
+            <h3>Automated water cannon — descender flushing system (RDF)</h3>
+            <p className="project__meta">Trishuli 3A Hydropower, Rasuwa · 60 MW · Team project</p>
             <p className="project__text">
-              We turned a manual spray hose into an automated one that records a
-              human operator&apos;s motion and replays it. I worked on the software
-              side; the hardware and the build were the team&apos;s.
+              We turned a powerful, manually operated water cannon into an
+              automated water cannon that records a human operator&apos;s motion
+              and replays it. It was implemented at the 60 MW Trishuli 3A
+              Hydropower in Rasuwa district for descender flushing. Operators can
+              upload many motions and replay them later. I contributed to both the
+              hardware and the software, mainly the hardware.
             </p>
             <ol className="cannon__steps">
               <li>
                 <span>Record</span>
-                An operator moves the hose by hand.
+                An operator aims the cannon by hand.
               </li>
               <li>
                 <span>Store</span>
@@ -135,11 +105,27 @@ export function Work() {
             </ol>
           </div>
 
-          <div className="cannon__space">
-            <p className="cannon__space-label">Prototype space</p>
-            <p className="cannon__space-text">
-              Kept open for the next build, with the cannon mounted.
-            </p>
+          <div className="cannon__media">
+            <figure className="project__media">
+              <Image
+                src="/work/water-cannon.jpeg"
+                width={1350}
+                height={1600}
+                alt="The automated water cannon: a red motorised pipe fitting with servo motors and a pressure gauge"
+                sizes="(max-width: 1024px) 100vw, 38vw"
+              />
+              <figcaption>The cannon.</figcaption>
+            </figure>
+            <figure className="project__media">
+              <Image
+                src="/work/water-cannon-system.jpeg"
+                width={1600}
+                height={1267}
+                alt="Half of the automated water cannon control system: controller board, wiring and a handheld remote"
+                sizes="(max-width: 1024px) 100vw, 38vw"
+              />
+              <figcaption>Half of the automated water cannon control system.</figcaption>
+            </figure>
           </div>
         </article>
       </div>

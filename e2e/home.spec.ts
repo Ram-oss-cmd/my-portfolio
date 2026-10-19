@@ -16,7 +16,7 @@ test.afterEach(() => {
 });
 
 test.describe("home", () => {
-  test("delivers the hero, name, clock, sections and real work images", async ({
+  test("delivers the hero, name, sections and real work images", async ({
     page,
   }) => {
     const response = await openSite(page);
@@ -27,14 +27,13 @@ test.describe("home", () => {
       hero.getByRole("heading", { level: 1 }),
     ).toContainText(/can.t afford to be sloppy/i);
     await expect(hero.getByText("श्रीराम चौधरी")).toBeVisible();
-    await expect(hero.getByText(/Shreeram Chaudhary/i).first()).toBeVisible();
-    await expect(hero.getByLabel(/live time in Kathmandu/i)).toBeVisible();
+    await expect(hero.getByText(/Shreeram Chaudhary/i)).toHaveCount(0);
     await expect(
       page.getByRole("link", { name: /explore my work/i }),
     ).toBeVisible();
     await expect(page.getByRole("link", { name: /get in touch/i })).toBeVisible();
 
-    for (const id of ["about", "work", "stack", "contact"]) {
+    for (const id of ["about", "work", "contact"]) {
       await expect(page.locator(`#${id}`), `section #${id}`).toBeAttached();
     }
 
@@ -50,6 +49,13 @@ test.describe("home", () => {
     await expect(ledger).toBeVisible();
     await expect
       .poll(async () => ledger.evaluate((img) => (img as HTMLImageElement).naturalWidth))
+      .toBeGreaterThan(0);
+
+    const cannon = page.getByAltText(/automated water cannon: a red motorised/i);
+    await cannon.scrollIntoViewIfNeeded();
+    await expect(cannon).toBeVisible();
+    await expect
+      .poll(async () => cannon.evaluate((img) => (img as HTMLImageElement).naturalWidth))
       .toBeGreaterThan(0);
   });
 

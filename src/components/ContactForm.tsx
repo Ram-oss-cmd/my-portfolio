@@ -170,9 +170,6 @@ export function ContactForm() {
       >
         {status === "submitting" ? "Sending…" : "Send message"}
       </button>
-      <p className="contact-form__note">
-        Messages go to this site&apos;s own API. No tracking, no third-party inbox.
-      </p>
     </form>
   );
 }

@@ -16,24 +16,35 @@ test.afterEach(() => {
 });
 
 test.describe("content honesty", () => {
-  test("labels sample loan data and credits the team project", async ({
+  test("credits the water cannon as hardware and software team work", async ({
     page,
   }) => {
     await openSite(page);
 
-    await expect(
-      page.getByText(/sample data, not client data/i).first(),
-    ).toBeVisible();
-
     const work = page.locator("#work");
     await expect(work.getByText(/team project/i).first()).toBeVisible();
     await expect(
-      work.getByText(/software side|did not build it alone/i).first(),
+      work.getByText(/descender flushing system \(RDF\)/i),
     ).toBeVisible();
-
-    const stack = page.locator("#stack");
-    await expect(stack.getByText(/learning now/i)).toBeVisible();
-    await expect(stack.getByText(/Python, AI, Robotics/)).toBeVisible();
+    await expect(work.getByText(/Trishuli 3A Hydropower, Rasuwa/i)).toBeVisible();
+    await expect(work.getByText(/60 MW/).first()).toBeVisible();
+    await expect(work.getByText(/upload many motions/i)).toBeVisible();
+    await expect(
+      work.getByText(/manages the hydropower.s inventory/i),
+    ).toBeVisible();
+    await expect(page.getByText(/spray hose/i)).toHaveCount(0);
+    await expect(
+      work.getByText(/half of the automated water cannon control system/i),
+    ).toBeVisible();
+    await expect(
+      work.getByText(/hardware and the software, mainly the hardware/i),
+    ).toBeVisible();
+    await expect(
+      work.getByText(/client data and screenshots are not shown/i),
+    ).toBeVisible();
+    await expect(page.getByText(/made with|my role/i)).toHaveCount(0);
+    await expect(page.locator("#stack")).toHaveCount(0);
+    await expect(page.getByText(/interest engine/i)).toHaveCount(0);
   });
 
   test("contains no invented social proof or statistics", async ({ page }) => {
@@ -67,6 +78,7 @@ test.describe("content honesty", () => {
     await expect(
       page.getByRole("link", { name: /download cv/i }),
     ).toHaveCount(0);
-    await expect(page.getByText(/Linux is home base/i)).toBeVisible();
+    await expect(page.getByText(/Linux is home base/i)).toHaveCount(0);
+    await expect(page.getByText(/running live on real plant data/i)).toBeVisible();
   });
 });

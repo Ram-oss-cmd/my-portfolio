@@ -28,3 +28,4 @@ Status values: TODO / DOING / REVIEW / QA / DONE
 | R-02 | Remove old theme pieces: Penstock, preloader, pinned turbine, terminal, gauges, custom cursor, CV, open slots, 0.990 MW outside the Selang card | lead | DONE | Deleted 11 components + 2 hooks; native cursor restored; REC/PLAY moved into the hero card |
 | R-03 | Real project visuals, water-cannon space, Linux content, contact email | lead | DONE | `public/work/selang-dashboard.png`, `public/work/abhiyan-ledger.jpeg`; reserved prototype panel; `rc.cloop@gmail.com` |
 | R-04 | Rewrite E2E for new DOM and rerun all gates | qa | DONE | 79/79 Playwright (desktop 27, Pixel 7 27, contract 25); lint/build/unit 10/10 green |
+| R-05 | Copy and layout corrections: remove hero eyebrow, Stack and loan calculator; revise About/Work facts; add water-cannon photos | lead | DONE | Real inventory, budget logging, confidential Temke, hardware/software credit; 69/69 Playwright |

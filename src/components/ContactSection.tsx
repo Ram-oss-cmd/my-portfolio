@@ -7,7 +7,7 @@ export function ContactSection() {
   return (
     <section id="contact" className="contact section">
       <div className="shell contact__grid">
-        <div className="contact__statement" data-reveal>
+        <div className="contact__statement" data-reveal suppressHydrationWarning>
           <p className="eyebrow eyebrow--light">Contact</p>
           <h2>Have something worth building?</h2>
           <p className="contact__blurb">{contact.blurb}</p>
@@ -22,7 +22,7 @@ export function ContactSection() {
           </div>
         </div>
 
-        <div className="contact__form" data-reveal>
+        <div className="contact__form" data-reveal suppressHydrationWarning>
           <h3>Send a message</h3>
           <ContactForm />
         </div>

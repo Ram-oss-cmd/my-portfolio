@@ -3,9 +3,8 @@ import { ContactSection } from "@/components/ContactSection";
 import { Hero } from "@/components/Hero";
 import { Nozzle } from "@/components/Nozzle";
 import { SiteFooter } from "@/components/SiteFooter";
-import { Stack } from "@/components/Stack";
 import { Work } from "@/components/Work";
-import { site, stackGroups } from "@/data/content";
+import { site } from "@/data/content";
 
 const person = {
   "@context": "https://schema.org",
@@ -19,7 +18,15 @@ const person = {
     "@type": "PostalAddress",
     addressCountry: "NP",
   },
-  knowsAbout: stackGroups.flatMap((group) => group.items),
+  knowsAbout: [
+    "Hydropower plant management",
+    "Inventory management",
+    "Budget and human resource systems",
+    "Audit and loan systems",
+    "Web application development",
+    "IoT automation",
+    "Linux",
+  ],
 };
 
 const jsonLd = JSON.stringify(person).replace(/</g, "\\u003c");
@@ -36,7 +43,6 @@ export default function Home() {
         <Hero />
         <About />
         <Work />
-        <Stack />
         <ContactSection />
       </main>
       <SiteFooter />

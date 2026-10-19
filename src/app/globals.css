@@ -414,7 +414,7 @@ h4 {
 /* ---------- hero ---------- */
 
 .hero {
-  padding-block: clamp(48px, 8vw, 104px) clamp(56px, 8vw, 100px);
+  padding-block: clamp(32px, 5.5vw, 76px) clamp(56px, 8vw, 100px);
 }
 
 .hero__grid {
@@ -445,21 +445,6 @@ h4 {
   flex-wrap: wrap;
   gap: 22px;
   margin-top: 34px;
-}
-
-.hero__foot {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 18px 36px;
-  margin-top: clamp(44px, 6vw, 72px);
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-}
-
-.hero__note {
-  font-size: 0.92rem;
-  color: var(--muted);
 }
 
 .hero__aside {
@@ -651,13 +636,6 @@ h4 {
   max-width: 13ch;
 }
 
-.about__nepali {
-  margin-top: 26px;
-  font-family: var(--devanagari);
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
-  color: var(--muted);
-}
-
 .about__body {
   max-width: 62ch;
 }
@@ -718,26 +696,14 @@ h4 {
   max-width: 50ch;
 }
 
-.project__facts {
-  display: grid;
-  gap: 14px;
-  margin-top: 28px;
+.project--text .project__copy {
+  max-width: 72ch;
 }
 
-.project__facts > div {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: 16px;
-}
-
-.project__facts dt {
-  font-size: 0.82rem;
-  font-weight: 650;
-  color: var(--muted);
-}
-
-.project__facts dd {
-  font-size: 0.96rem;
+.project--text .project__text {
+  max-width: 66ch;
+  font-size: clamp(1.08rem, 1.5vw, 1.28rem);
+  line-height: 1.55;
 }
 
 .project__media {
@@ -784,29 +750,10 @@ h4 {
   box-shadow: 14px 14px 0 var(--cobalt);
 }
 
-.project--calc {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(28px, 4vw, 64px);
-  align-items: start;
-}
-
-.project__calculator {
-  padding: 22px;
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  border-radius: 2px;
-  box-shadow: 12px 12px 0 var(--lime);
-}
-
-.project__calculator h4 {
-  margin-bottom: 16px;
-}
-
 .project--cannon {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: clamp(28px, 4vw, 56px);
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 4vw, 40px);
   padding: clamp(24px, 4vw, 44px);
   background: var(--lime);
   border: 1.5px solid var(--ink);
@@ -814,14 +761,15 @@ h4 {
 
 .cannon__steps {
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
   margin-top: 26px;
 }
 
 .cannon__steps li {
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 2px;
   padding-top: 12px;
   border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
   font-size: 0.95rem;
@@ -831,26 +779,16 @@ h4 {
   font-weight: 700;
 }
 
-.cannon__space {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 40px;
-  min-height: 260px;
-  padding: 22px;
-  border: 1.5px dashed var(--ink);
-  background: color-mix(in srgb, var(--ivory) 40%, transparent);
+.cannon__media {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 20px);
+  align-items: start;
 }
 
-.cannon__space-label {
-  font-family: var(--display);
-  font-size: clamp(1.7rem, 2.6vw, 2.2rem);
-  line-height: 1.05;
-}
-
-.cannon__space-text {
-  max-width: 24ch;
-  font-size: 0.92rem;
+.cannon__media .project__media {
+  padding: 8px;
+  background: var(--ivory);
 }
 
 /* ---------- loan calculator ---------- */
@@ -1006,84 +944,6 @@ h4 {
   justify-self: start;
 }
 
-/* ---------- stack ---------- */
-
-.stack__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: clamp(36px, 5vw, 56px);
-  border-top: 1.5px solid var(--ink);
-}
-
-.stack__group {
-  padding: 28px 32px 32px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.stack__group:nth-child(even) {
-  padding-right: 0;
-  padding-left: 32px;
-  border-left: 1px solid var(--line);
-}
-
-.stack__group h3 {
-  margin-bottom: 14px;
-  font-family: var(--sans);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.stack__group li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 1.02rem;
-}
-
-.stack__group li:last-child {
-  border-bottom: 0;
-}
-
-.stack__foot {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 16px;
-  margin-top: clamp(32px, 4vw, 48px);
-}
-
-.stack__linux,
-.stack__learning {
-  padding: clamp(22px, 3vw, 34px);
-  border-radius: 2px;
-}
-
-.stack__linux {
-  background: var(--ink);
-  color: var(--ivory);
-}
-
-.stack__linux h3 {
-  color: var(--lime);
-}
-
-.stack__learning {
-  background: var(--orange);
-  color: var(--ink);
-}
-
-.stack__foot h3 {
-  margin-bottom: 12px;
-  font-family: var(--sans);
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.stack__foot p {
-  max-width: 42ch;
-  font-size: 0.95rem;
-}
-
 /* ---------- contact ---------- */
 
 .contact {
@@ -1236,20 +1096,6 @@ h4 {
   font-size: 0.88rem;
 }
 
-.footer__brand {
-  font-weight: 650;
-}
-
-.footer__brand span {
-  margin-left: 8px;
-  font-family: var(--devanagari);
-  font-weight: 400;
-}
-
-.footer__place {
-  color: var(--muted);
-}
-
 .footer__top {
   font-weight: 600;
   border-bottom: 1.5px solid transparent;
@@ -1302,17 +1148,12 @@ h4 {
 
   .project--feature,
   .project--split,
-  .project--calc,
   .project--cannon {
     grid-template-columns: 1fr;
   }
 
   .project--split .project__media--phone {
     order: -1;
-  }
-
-  .stack__foot {
-    grid-template-columns: 1fr;
   }
 
   .contact__grid {
@@ -1396,21 +1237,6 @@ h4 {
     font-size: 1rem;
   }
 
-  .stack__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stack__group,
-  .stack__group:nth-child(even) {
-    padding: 24px 0 28px;
-    border-left: 0;
-  }
-
-  .project__facts > div {
-    grid-template-columns: 1fr;
-    gap: 2px;
-  }
-
   .contact__form {
     box-shadow: 8px 8px 0 var(--orange);
   }
@@ -1424,9 +1250,18 @@ h4 {
     box-shadow: 8px 8px 0 var(--cobalt);
   }
 
+  .cannon__steps {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
   .cannon__steps li {
     grid-template-columns: 1fr;
     gap: 2px;
+  }
+
+  .cannon__media {
+    grid-template-columns: 1fr;
   }
 
   .footer__inner {
