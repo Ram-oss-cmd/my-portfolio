@@ -8,8 +8,14 @@ export function Work() {
           <p className="eyebrow">Selected work</p>
           <h2>Four systems so far. Each one a different problem.</h2>
           <p className="section-head__note">
-            A plant, an office, a lender and a machine. Different rooms, same job:
-            make the work easier to run than the paper process it replaced.
+            I’ve built solutions across diverse domains, including plant
+            management, office operations, lending, and machinery. Each project
+            focuses on streamlining workflows, improving efficiency, and
+            replacing manual, paper-based processes with practical digital
+            solutions.
+          </p>
+          <p className="section-head__note">
+            Here are some of the projects I’ve worked on.
           </p>
         </div>
 
